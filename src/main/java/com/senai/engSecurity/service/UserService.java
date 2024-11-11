@@ -1,5 +1,6 @@
 package com.senai.engSecurity.service;
 
+import com.senai.engSecurity.dto.LoginResponse;
 import com.senai.engSecurity.model.User;
 import com.senai.engSecurity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,40 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User findByUsernameAndPassword(User user) {
-        return this.userRepository
-                .findByUsernameAndPassword(user.getUsername(), user.getPassword())
-                .orElseThrow(() -> new UsernameNotFoundException(user.getUsername()));
+    public LoginResponse findByUsernameAndPassword(User user) {
+        System.out.println("Login Recebido Service: " + user.getUsername());
+        System.out.println("A Senha Recebida Service: " + user.getPassword());
+        try {
+            Optional<User> foundUser = userRepository.findByUsernameAndPassword(
+                    user.getUsername(),
+                    user.getPassword()
+            );
+
+            System.out.println("Retorno da Consulta Service: " + foundUser);
+
+            if (foundUser.isPresent()) {
+                User authenticatedUser = foundUser.get();
+                return new LoginResponse(
+                        true,
+                        "Usuário autenticado com sucesso",
+                        authenticatedUser.getUsername(),
+                        authenticatedUser.getRoles() // Agora retornamos a lista de roles
+                );
+            } else {
+                return new LoginResponse(
+                        false,
+                        "Usuário ou senha inválidos",
+                        null,
+                        null
+                );
+            }
+        } catch (Exception e) {
+            return new LoginResponse(
+                    false,
+                    "Erro ao processar a autenticação: " + e.getMessage(),
+                    null,
+                    null
+            );
+        }
     }
 }
