@@ -4,7 +4,7 @@ import com.senai.engSecurity.dto.LoginResponse;
 import com.senai.engSecurity.model.User;
 import com.senai.engSecurity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,6 +26,7 @@ public class UserService {
     public LoginResponse findByUsernameAndPassword(User user) {
         System.out.println("Login Recebido Service: " + user.getUsername());
         System.out.println("A Senha Recebida Service: " + user.getPassword());
+        //user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         try {
             Optional<User> foundUser = userRepository.findByUsernameAndPassword(
                     user.getUsername(),
