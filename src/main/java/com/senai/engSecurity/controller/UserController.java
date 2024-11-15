@@ -1,9 +1,11 @@
 package com.senai.engSecurity.controller;
 
+import com.senai.engSecurity.Exception.UserWasRegistred;
 import com.senai.engSecurity.dto.LoginResponse;
 import com.senai.engSecurity.model.User;
 import com.senai.engSecurity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,10 +17,18 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    public User save(@RequestBody User user) {
-        return userService.save(user);
+    @PostMapping("/save")
+    public ResponseEntity<String> save(@RequestBody User user) {
+        try {
+            String resultado = String.valueOf(userService.save(user));
+            return ResponseEntity.ok(resultado);
+        } catch (UserWasRegistred e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno ao salvar a pessoa.");
+        }
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody User user) {

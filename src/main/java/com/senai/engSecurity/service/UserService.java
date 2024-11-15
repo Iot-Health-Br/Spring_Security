@@ -1,5 +1,6 @@
 package com.senai.engSecurity.service;
 
+import com.senai.engSecurity.Exception.UserWasRegistred;
 import com.senai.engSecurity.dto.LoginResponse;
 import com.senai.engSecurity.model.User;
 import com.senai.engSecurity.repository.UserRepository;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -19,9 +21,18 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+    public String save(User user) throws UserWasRegistred {
+        Optional<User> foundUser = userRepository.findByUsername(
+                user.getUsername()
+        );
+        if (foundUser.isPresent()) {
+            throw new UserWasRegistred("Username já cadastrado!");}
+        else {
+            user.setRoles(Collections.singletonList("USER"));
+            userRepository.save(user);
+            return "Usuário cadastrado com sucesso!";}
     }
+
 
     public LoginResponse findByUsernameAndPassword(User user) {
         System.out.println("Login Recebido Service: " + user.getUsername());

@@ -34,28 +34,6 @@ public class WebSecurityConfig {
                 .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 
-    /*
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**")) // Modificada a configuração do CSRF para ignorar requisições do console H2:
-                .headers(headers -> headers
-                        .frameOptions(frame -> frame.sameOrigin())) // Adiciona a configuração para permitir frames da mesma origem:
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(URL + "/").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "user").permitAll()
-                        .requestMatchers(HttpMethod.POST, "user/login").permitAll()
-                        .requestMatchers(URL + "api/user").hasAnyRole("USER", "ADM")
-                        .requestMatchers(URL + "/adm").hasAnyRole("ADM")
-                        .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults());
-
-        return http.build();
-    }*/
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -65,6 +43,7 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/save").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(URL + "api/user").hasAnyRole("USER", "ADM")
                         .requestMatchers(URL + "/adm").hasAnyRole("ADM")
