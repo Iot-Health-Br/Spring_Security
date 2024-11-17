@@ -7,12 +7,16 @@ public class LoginResponse {
     private String message;
     private String username;
     private List<String> roles;
+    private Long userId;      // Novo campo
+    private String fullName;  // Novo campo
 
-    public LoginResponse(boolean authenticated, String message, String username, List<String> roles) {
+    public LoginResponse(boolean authenticated, String message, String username, List<String> roles, Long userId, String fullName) {
         this.authenticated = authenticated;
         this.message = message;
         this.username = username;
         this.roles = roles;
+        this.userId = userId;
+        this.fullName = fullName;
     }
 
     // Getters e Setters
@@ -25,6 +29,22 @@ public class LoginResponse {
     public List<String> getRoles() { return roles; }
     public void setRoles(List<String> roles) { this.roles = roles; }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     @Override
     public String toString() {
         return "LoginResponse{" +
@@ -32,6 +52,8 @@ public class LoginResponse {
                 ", message='" + message + '\'' +
                 ", username='" + username + '\'' +
                 ", roles=" + roles +
+                ", userId=" + userId +
+                ", fullName='" + fullName + '\'' +
                 '}';
     }
 }
