@@ -1,5 +1,6 @@
 package com.senai.engSecurity.service;
 
+import com.senai.engSecurity.Exception.NotFoundUserList;
 import com.senai.engSecurity.Exception.UserWasRegistred;
 import com.senai.engSecurity.dto.LoginResponse;
 import com.senai.engSecurity.dto.UserDetailsDTO;
@@ -9,6 +10,7 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,7 @@ public class UserService {
             userRepository.save(user);
             return "Usuário cadastrado com sucesso!";}
     }
+
     public String saveAdm(User user) throws UserWasRegistred {
         Optional<User> foundUser = userRepository.findByUsername(
                 user.getUsername()
@@ -88,10 +91,14 @@ public class UserService {
         }
     }
 
-    public List<UserDetailsDTO> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<UserDetailsDTO> getAllUsers()throws NotFoundUserList {
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new NotFoundUserList("Nenhum usuário encontrado");}
+        else{
+            return users.stream()
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());}
     }
     private UserDetailsDTO convertToDTO(User user) {
         UserDetailsDTO dto = new UserDetailsDTO();

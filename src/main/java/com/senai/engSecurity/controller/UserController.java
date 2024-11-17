@@ -1,5 +1,7 @@
 package com.senai.engSecurity.controller;
 
+import com.senai.engSecurity.Error.ErrorResponse;
+import com.senai.engSecurity.Exception.NotFoundUserList;
 import com.senai.engSecurity.Exception.UserWasRegistred;
 import com.senai.engSecurity.dto.LoginResponse;
 import com.senai.engSecurity.dto.UserDetailsDTO;
@@ -53,7 +55,17 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public ResponseEntity<List<UserDetailsDTO>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<?> getAllUsers() {
+        try {
+            List<UserDetailsDTO> users = userService.getAllUsers();
+            return ResponseEntity.ok(users);
+        } catch (NotFoundUserList e) {
+            // Retorna um objeto com a mensagem de erro
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Erro interno ao buscar a lista de usuários."));
+        }
     }
 }
