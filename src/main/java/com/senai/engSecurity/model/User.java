@@ -16,6 +16,8 @@ public class User {
 
     private String username;
 
+    private String nome;
+
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -26,9 +28,10 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, List<String> roles) {
+    public User(Long id, String username,String nome, String password, List<String> roles) {
         this.id = id;
         this.username = username;
+        this.nome = nome;
         this.password = password;
         this.roles = roles;
     }
@@ -47,6 +50,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getPassword() {
@@ -86,6 +97,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
+                ", nome='" + nome + '\'' +
                 ", password='" + password + '\'' +
                 ", roles=" + roles +
                 '}';

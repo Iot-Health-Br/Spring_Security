@@ -44,6 +44,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/save").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/saveAdm").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/user/getUser").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(URL + "api/user").hasAnyRole("USER", "ADM")
                         .requestMatchers(URL + "/adm").hasAnyRole("ADM")

@@ -21,13 +21,13 @@ public class StartApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Criação do usuário ADMIN
-        createUserIfNotExists("admin", "ADMIN", "123", "ADMIN");
+        createUserIfNotExists("admin", "administrator", "123", "ADMIN");
 
         // Criação do usuário USER
-        createUserIfNotExists("user", "USER", "123", "USER");
+        createUserIfNotExists("user", "user", "123", "USER");
 
         // Criação do usuário MANAGER
-        createUserIfNotExists("igor1", "MANAGER", "123", "MANAGER");
+        createUserIfNotExists("igor", "Igor Leonor Macedo", "123", "MANAGER");
     }
 
     private void createUserIfNotExists(String username, String name, String password, String role) {
@@ -35,8 +35,8 @@ public class StartApplication implements CommandLineRunner {
 
         if (optionalUser.isEmpty()) {
             User user = new User();
-            user.setUsername(name);
             user.setUsername(username);
+            user.setNome(name);
             user.setPassword(password);
             //user.setPassword(new BCryptPasswordEncoder().encode(password));
             user.getRoles().add(role);

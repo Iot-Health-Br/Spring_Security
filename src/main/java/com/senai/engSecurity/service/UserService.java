@@ -2,14 +2,20 @@ package com.senai.engSecurity.service;
 
 import com.senai.engSecurity.Exception.UserWasRegistred;
 import com.senai.engSecurity.dto.LoginResponse;
+import com.senai.engSecurity.dto.UserDetailsDTO;
 import com.senai.engSecurity.model.User;
 import com.senai.engSecurity.repository.UserRepository;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -31,6 +37,16 @@ public class UserService {
             user.setRoles(Collections.singletonList("USER"));
             userRepository.save(user);
             return "Usuário cadastrado com sucesso!";}
+    }
+    public String saveAdm(User user) throws UserWasRegistred {
+        Optional<User> foundUser = userRepository.findByUsername(
+                user.getUsername()
+        );
+        if (foundUser.isPresent()) {
+            throw new UserWasRegistred("Username já cadastrado!");}
+        else {
+            userRepository.save(user);
+            return "Adm cadastrado com sucesso!";}
     }
 
 
@@ -70,5 +86,16 @@ public class UserService {
                     null
             );
         }
+    }
+
+    public List<UserDetailsDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    private UserDetailsDTO convertToDTO(User user) {
+        UserDetailsDTO dto = new UserDetailsDTO();
+        BeanUtils.copyProperties(user, dto);
+        return dto;
     }
 }
